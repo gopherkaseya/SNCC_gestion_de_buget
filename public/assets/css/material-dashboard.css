@@ -219,6 +219,12 @@ hr {
   opacity: 0.25;
 }
 
+input:-webkit-autofill {
+    background-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #000 !important;
+}
+
 h6,
 .h6,
 h5,

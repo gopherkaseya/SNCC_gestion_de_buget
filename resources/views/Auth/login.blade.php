@@ -34,18 +34,23 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <form role="form" class="text-start" autocomplete="off">
+                                <form role="form" class="text-start" method="POST" autocomplete="off">
+                                    @csrf
+
+                                    @error('email')
+                                    {{dd()}}
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
                                     <div class="input-group input-group-outline my-3">
                                         <label class="form-label">Email</label>
-                                        <input type="email" class="form-control">
+                                        <input type="email" name="email" class="form-control">
                                     </div>
                                     <div class="input-group input-group-outline mb-3">
                                         <label class="form-label">Mot de passe</label>
-                                        <input type="password" class="form-control">
+                                        <input type="password" name="password" class="form-control">
                                     </div>
-
                                     <div class="text-center">
-                                        <button type="button" class="btn bg-gradient-dark w-100 my-4 mb-2">Se connecter</button>
+                                        <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Se connecter</button>
                                     </div>
 
                                 </form>
