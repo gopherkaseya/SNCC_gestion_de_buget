@@ -65,12 +65,6 @@
                                     🔗 Consolider les budgets
                                 </button>
 
-                                <form method="POST" action="">
-                                    @csrf
-                                    <button type="submit" class="btn btn-dark">
-                                        📤 Soumettre au DG
-                                    </button>
-                                </form>
                             </div>
                         </div>
                 </div>
@@ -97,8 +91,13 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
+    <!-- Script de consolidation -->
     <script>
         document.getElementById('btn-consolider').addEventListener('click', function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = "⏳ Consolidation...";
+
             fetch('{{ route('RF.consolider.ajax') }}', {
                 method: 'POST',
                 headers: {
@@ -115,21 +114,86 @@
                             .then(resp => resp.text())
                             .then(html => {
                                 document.getElementById('budget-table-container').innerHTML = html;
+                                alert('✅ Budgets consolidés avec succès.');
+                                // Masquer le bouton après consolidation
+                                document.getElementById('btn-consolider').style.display = 'none';
+                                window.location.reload();
                             });
                     } else {
                         alert('❌ Erreur : ' + data.message);
+                        btn.disabled = false;
+                        btn.innerHTML = "🔗 Consolider les budgets";
                     }
                 })
                 .catch(error => {
                     console.error('Erreur AJAX :', error);
                     alert('❌ Une erreur est survenue.');
+                    btn.disabled = false;
+                    btn.innerHTML = "🔗 Consolider les budgets";
                 });
         });
 
+        function updateButtons() {
+            const btnConsolider = document.getElementById('btn-consolider');
+            let canConsolider = false;
+            document.querySelectorAll('#budget-table-container tbody tr').forEach(row => {
+                const statut = row.querySelector('td:nth-child(4) .badge').innerText.trim().toLowerCase();
+                if (statut === 'soumis') {
+                    canConsolider = true;
+                }
+            });
+            // Si aucun budget n'est "soumis", masquer le bouton
+            if (!canConsolider && btnConsolider) {
+                btnConsolider.style.display = 'none';
+            } else if (btnConsolider) {
+                btnConsolider.style.display = '';
+                btnConsolider.disabled = false;
+                btnConsolider.innerHTML = "🔗 Consolider les budgets";
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateButtons);
     </script>
 
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('../assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
+    <script>
+        function updateButtons() {
+            const btnConsolider = document.getElementById('btn-consolider');
+            const btnSoumettre = document.getElementById('btn-soumettre-dg');
+            const soumettreWrapper = document.getElementById('soumettre-wrapper');
+
+            let canConsolider = false;
+            let canSoumettre = false;
+
+            document.querySelectorAll('#budget-table-container tbody tr').forEach(row => {
+                const statut = row.querySelector('td:nth-child(4) .badge').innerText.trim().toLowerCase();
+
+                if (statut === 'soumis') {
+                    canConsolider = true;
+                }
+
+                if (statut === 'consolidé et non soumis') {
+                    canSoumettre = true;
+                }
+            });
+
+            // Bouton Consolider
+            btnConsolider.disabled = !canConsolider;
+            btnConsolider.innerHTML = canConsolider ? "🔗 Consolider les budgets" : "✅ Consolidé";
+
+            // Affichage du bouton Soumettre
+            if (canSoumettre) {
+                soumettreWrapper.style.display = 'inline-block';
+            } else {
+                soumettreWrapper.style.display = 'none';
+            }
+        }
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', updateButtons);
+    </script>
+
 @endsection

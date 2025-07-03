@@ -22,7 +22,7 @@ class AuthController extends Controller
                 return redirect('/responsable-finance');
             }
             if (Auth::user()->role == "controleurgestion"){
-
+                return redirect('/controleur-gestion');
             }
             if(Auth::user()->role == "compatble"){
 
@@ -31,7 +31,7 @@ class AuthController extends Controller
 
             }
             if (Auth::user()->role == "directeurgeneral"){
-
+                return redirect('/directeur-general');
             }
 
 

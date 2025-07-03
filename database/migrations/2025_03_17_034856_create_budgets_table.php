@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('budget_global_id')->nullable();
             $table->string('nom_departement');
             $table->text('description');
             $table->float('montant');
             $table->string('statut');
             $table->timestamps();
+
+            $table->foreign('budget_global_id')->references('id')->on('budget_globals')->onDelete('set null');
         });
     }
 

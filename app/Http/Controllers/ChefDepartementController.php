@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class ChefDepartementController extends Controller
 {
     public function index(){
-        return view('CD.index');
+        $besoins = Besoin::orderBy('created_at', 'desc')->get();
+        return view('CD.index', compact('besoins'));
     }
 
     public function preparer(){
@@ -19,12 +20,19 @@ class ChefDepartementController extends Controller
 
     public function store(Request $request)
     {
-        Budget::create([
+        $budget = Budget::create([
             'nom_departement' => $request->nom_departement,
             'description' => $request->description,
             'montant' => $request->montant,
-            'statut' => 'soumis'
+            'statut' => 'soumis',
+            // On ne précise pas budget_global_id, il sera NULL par défaut
         ]);
+
+        if ($request->has('besoin_ids')) {
+            Besoin::whereIn('id', $request->besoin_ids)->update([
+                'budget_id' => $budget->id
+            ]);
+        }
 
         return to_route('chef-departement.preparer')->with('success', 'Le budget a été soumis avec succés');
     }

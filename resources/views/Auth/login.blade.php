@@ -38,8 +38,7 @@
                                     @csrf
 
                                     @error('email')
-                                    {{dd()}}
-                                        <div class="alert alert-danger">{{ $message }}</div>
+                                        <div class="alert alert-danger text-white">{{ $message }}</div>
                                     @enderror
                                     <div class="input-group input-group-outline my-3">
                                         <label class="form-label">Email</label>

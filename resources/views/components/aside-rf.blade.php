@@ -22,11 +22,18 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ \Illuminate\Support\Facades\Route::currentRouteName() === 'RF.indexs' ? 'bg-gradient-dark text-white' : 'text-dark' }}" href="{{route('RF.index')}}">
-                    <i class="material-symbols-rounded opacity-5">account_balance</i>
-                    <span class="nav-link-text ms-1">Consolider budget</span>
+                <a class="nav-link {{ \Illuminate\Support\Facades\Route::currentRouteName() === 'RF.budgets-globaux-non-soumis' ? 'bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('RF.budgets-globaux-non-soumis') }}">
+                    <i class="material-symbols-rounded opacity-5">account_balance_wallet</i>
+                    <span class="nav-link-text ms-1">Budgets globaux</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{route('logout')}}">
+                    <i class="material-symbols-rounded opacity-5">logout</i>
+                    <span class="nav-link-text ms-1">Se deconnecter</span>
+                </a>
+            </li>
+
 
         </ul>
     </div>

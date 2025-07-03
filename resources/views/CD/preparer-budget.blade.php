@@ -27,7 +27,7 @@
                 <div class="col-md-5 mt-4">
                     <div class="card">
                         <div class="card-header pb-0 px-3">
-                            <h6 class="mb-0">Formulaire de besoins des départements</h6>
+                            <h6 class="mb-0">Formulaire de creation de budget</h6>
                         </div>
                         <div class="card-body pt-4 p-3">
                             @if (session('success'))
@@ -37,50 +37,38 @@
                             @endif
                             <form action="" method="POST">
                                 @csrf
-                                <div id="besoinsContainer">
-                                    <!-- Section pour un besoin -->
-                                    <div class="besoin-item mb-3">
-                                        <div class="input-group input-group-outline mb-3">
-                                            <label class="form-label">Nom du département</label>
-                                            <input type="text" class="form-control" name="nom_departement">
-                                        </div>
-                                        <div class="input-group input-group-outline mb-3">
-                                            <textarea class="form-control" name="description" placeholder="Description ..." rows="3"></textarea>
-                                        </div>
-                                        <div class="input-group input-group-outline mb-3">
-                                            <label class="form-label">Budget estimé</label>
-                                            <input type="number" class="form-control" name="montant">
-                                        </div>
-                                        <hr>
-                                    </div>
+                                <div class="input-group input-group-outline mb-3">
+                                    <label class="form-label">Nom du département</label>
+                                    <input type="text" class="form-control" name="nom_departement" required>
                                 </div>
+
+                                <div class="input-group input-group-outline mb-3">
+                                    <textarea class="form-control" name="description" placeholder="Description ..." rows="3" required></textarea>
+                                </div>
+
+                                <div class="input-group input-group-outline mb-3">
+                                    <label class="form-label">Budget estimé</label>
+                                    <input type="text" class="form-control" name="montant_affiche" id="montant_affiche" readonly>
+                                    <input type="hidden" name="montant" id="montant_valeur">
+                                </div>
+
+
+                                <div class="input-group input-group-outline mb-3">
+                                    <label class="form-label">Associer des besoins existants</label>
+                                    <select class="form-control mt-6"  name="besoin_ids[]" multiple size="5" required>
+                                        @foreach($besoins as $besoin)
+                                            @if($besoin->budget_id === null)
+                                                <option value="{{ $besoin->id }}" data-montant="{{ $besoin->montant }}">
+                                                    {{ $besoin->nom_service }} - {{ number_format($besoin->montant, 0, ',', ' ') }} FC
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Appuyez sur Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs besoins</small>
+                                </div>
+
                                 <button type="submit" class="btn btn-success">Soumettre</button>
                             </form>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-7 mt-4">
-                    <div class="card">
-                        <div class="card-header pb-0 px-3">
-                            <h6 class="mb-0">Listes de besoins et objectifs</h6>
-                        </div>
-                        <div class="card-body pt-4 p-3">
-                            <ul class="list-group">
-                                @forelse($besoins as $besoin)
-                                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-3 text-sm">{{$besoin->nom_service}}</h6>
-                                            <span class="mb-2 text-xs">Description : <span class="text-dark ms-sm-2 font-weight-bold">{{$besoin->description}}</span></span>
-                                            <span class="mb-2 text-xs">Budget estimé : <span class="text-dark ms-sm-2 font-weight-bold">{{$besoin->montant}}</span></span>
-                                        </div>
-                                        <div class="ms-auto text-end">
-                                        </div>
-                                    </li>
-                                @empty
-                                    Aucun besoin
-                                @endforelse
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -122,6 +110,60 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectBesoins = document.querySelector('select[name="besoin_ids[]"]');
+            const montantAffiche = document.getElementById('montant_affiche');
+            const montantValeur = document.getElementById('montant_valeur');
+
+            function formatNombre(nombre) {
+                return nombre.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " FC";
+            }
+
+            selectBesoins.addEventListener('change', function () {
+                let total = 0;
+                const selectedOptions = Array.from(this.selectedOptions);
+
+                selectedOptions.forEach(option => {
+                    const montant = parseFloat(option.getAttribute('data-montant'));
+                    if (!isNaN(montant)) {
+                        total += montant;
+                    }
+                });
+
+                montantValeur.value = total; // valeur brute
+                montantAffiche.value = formatNombre(total); // valeur formatée
+            });
+        });
+    </script>
+    <script>
+        function updateFilledState(input) {
+            if (input.value.trim() !== "") {
+                input.parentElement.classList.add('is-filled');
+            } else {
+                input.parentElement.classList.remove('is-filled');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const montantAffiche = document.getElementById('montant_affiche');
+
+            // Au chargement, applique la classe si une valeur existe
+            updateFilledState(montantAffiche);
+
+            // À chaque mise à jour du champ
+            montantAffiche.addEventListener('input', function () {
+                updateFilledState(this);
+            });
+
+            // Si tu modifies sa valeur via JavaScript :
+            // ex. montantAffiche.value = "100 000 FCFA"; updateFilledState(montantAffiche);
+        });
+    </script>
+
+
+
+
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->

@@ -16,6 +16,13 @@
                     </ol>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <li class="nav-item d-flex align-items-center">
+
+                        <i class="material-symbols-rounded">account_circle</i>
+                        <span class="nav-link-text ms-1">{{Auth::user()->name}}</span>
+                    </li>
+                </div>
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
 
                     </div>
@@ -45,63 +52,32 @@
                                 <h6 class="text-white text-capitalize ps-3">Besoins & objectifs</h6>
                             </div>
                         </div>
-                        <div class="card-body px-0 pb-2">
-                            <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Departement</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Besoins</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date soumission</th>
-                                        <th class="text-secondary opacity-7"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">Nom du departement</h6>
-                                                </div>
+                        @foreach($besoins as $besoin)
+                            <div class="col-xl-3 m-3 col-sm-6  mb-4">
+                                <div class="card">
+                                    <div class="card-header p-2 ps-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <p class="text-sm mb-0 text-capitalize">{{$besoin->description}}</p>
+                                                <h4 class="mb-0"> {{$besoin->montant}} FC</h4>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Lorem</p>
-                                            <p class="text-xs text-secondary mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab reprehenderi Organization</p>
-                                        </td>
-
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">Nom du departement</h6>
-                                                </div>
+                                            <div class="icon icon-md icon-shape {{$besoin->budget_id !== null ? 'bg-gradient-success' : 'bg-gradient-dark' }}  shadow-dark shadow text-center border-radius-lg">
+                                                <i class="material-symbols-rounded opacity-10">{{$besoin->budget_id !== null ? 'verified_user' : 'receipt_long' }}</i>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Lorem</p>
-                                            <p class="text-xs text-secondary mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab reprehenderi Organization</p>
-                                        </td>
-
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                        </td>
-
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                        </div>
+                                    </div>
+                                    <hr class="dark horizontal my-0">
+                                    <div class="card-footer p-2 ps-3">
+                                        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">{{$besoin->nom_service}} </span>{{$besoin->created_at}}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
+
                     </div>
                 </div>
             </div>
+
 
             <footer class="footer py-4  ">
 

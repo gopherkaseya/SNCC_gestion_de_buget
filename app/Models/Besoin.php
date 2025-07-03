@@ -10,6 +10,11 @@ class Besoin extends Model
         'nom_service',
         'description',
         'montant',
-        'statut'
+        'statut',
+        'budget_id',
     ];
+
+    public function budget(){
+        return $this->belongsTo(Budget::class);
+    }
 }

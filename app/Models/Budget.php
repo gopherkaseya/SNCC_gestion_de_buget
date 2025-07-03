@@ -12,4 +12,13 @@ class Budget extends Model
         'montant',
         'statut'
     ];
+
+    public function besoins()
+    {
+        return $this->hasMany(Besoin::class);
+    }
+    public function budgetGlobal()
+    {
+        return $this->belongsTo(BudgetGlobal::class);
+    }
 }
